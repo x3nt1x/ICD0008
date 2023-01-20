@@ -1,0 +1,90 @@
+@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row position-relative">
+    @if (Model.Purchase != null)
+    {
+        <div class="col">
+            <h3 class="display-6">Total cost: @Math.Round(Model.Purchase.TotalPrice, 2) €</h3>
+        </div>
+
+        <div class="col position-absolute">
+            <form method="post">
+                <div class="input-group w-auto float-end">
+                    <input type="hidden" name="finalize" value="1"/>
+                    <button type="submit" class="btn btn-primary">Submit order</button>
+                </div>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="col text-center">
+            <h1 class="display-4">Cart is empty</h1>
+            <a href="../Index" class="btn btn-primary">Browse pizzas</a>
+        </div>
+
+        return;
+    }
+</div>
+
+<div class="grid text-center">
+    <div class="row">
+        @foreach (var purchasedPizza in Model.PurchasedPizzas)
+        {
+            var pizza = purchasedPizza.Pizza;
+            if (pizza == null)
+                continue;
+            
+            <div class="col" style="margin-bottom: 1rem">
+                <div class="card" style="width: 18rem;">
+                    <img src="https://api.lorem.space/image/pizza?w=800&h=800" class="card-img-top" alt="Pizza">
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">@pizza.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Category: @pizza.Category?.Name</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Price: @pizza.Price €</h6>
+                        <p class="card-text">@pizza.Description</p>
+
+                        <div class="btn-group-sm" role="group" aria-label="Basic checkbox toggle button group">
+                            @foreach (var extra in Model.Extras)
+                            {
+                                var id = $"{purchasedPizza.Id}-{extra.Id}";
+
+                                var pizzaExtra = extra.PizzaExtras?
+                                    .FirstOrDefault(pizzaExtra => pizzaExtra.ExtraId == extra.Id && pizzaExtra.PurchasedPizzaId == purchasedPizza.Id);
+
+                                <form method="post" style="display: inline">
+                                    <input type="hidden" name="extra" value="@id"/>
+
+                                    <input type="checkbox" class="btn-check" id="@id" autocomplete="off" name="extra"
+                                           value="@id" onclick="this.form.submit()"
+                                           @if (pizzaExtra != null)
+                                           {
+                                               <text>
+                                                   checked="checked"
+                                               </text>
+                                           }>
+
+                                    <label class="btn btn-sm btn-outline-primary" for="@id">
+                                        @extra.Name<br>
+                                        <span style="font-size: 0.75rem">@extra.Price €</span>
+                                    </label>
+                                </form>
+                            }
+                        </div>
+
+                        <form method="post" class="mt-2">
+                            <input type="hidden" name="id" value="@purchasedPizza.Id"/>
+                            <input class="btn btn-danger" type="submit" value="Remove from cart"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

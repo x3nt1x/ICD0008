@@ -1,0 +1,94 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Here are upcoming music festival details.</p>
+</div>
+
+<hr>
+<h6 class="display-5 text-center">Performing DJs</h6>
+
+<div class="grid text-center">
+    <div class="row">
+        @foreach (var dj in Model.Djs)
+        {
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <img src="https://www.seekpng.com/png/detail/110-1100707_person-avatar-placeholder.png" class="card-img-top" alt="dj">
+                    <div class="card-body">
+                        <h5 class="card-title">@dj.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Price: @dj.Price €</h6>
+                        
+                        <hr>
+                        <h6 class="card-subtitle mb-2">Set playlist</h6>
+
+                        @foreach (var songPlayed in dj.SongsPlayed!)
+                        {
+                            if(dj.Id != songPlayed.DjId)
+                                continue;
+
+                            var song = songPlayed.Song;
+                            
+                            <h6 class="card-subtitle mb-2 text-muted">@song?.Name</h6>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<hr>
+<div class="text-center">
+    <h6 class="display-5">Music authors</h6>
+
+    <div class="grid text-center">
+        <div class="row">
+            @foreach (var author in Model.Authors)
+            {
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://www.seekpng.com/png/detail/110-1100707_person-avatar-placeholder.png" class="card-img-top" alt="dj">
+                        <div class="card-body">
+                            <h5 class="card-title">@author.Name</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Price: @author.Price €</h6>
+                            
+                            <hr>
+                            <h6 class="card-subtitle mb-2">Songs played</h6>
+
+                            @{
+                                var songs = new HashSet<string>();
+                            } 
+
+                            @foreach (var songPlayed in author.SongsPlayed!)
+                            {
+                                if (author.Id != songPlayed.AuthorId)
+                                    continue;
+
+                                var song = songPlayed.Song;
+                                if (song == null || songs.Contains(song.Name))
+                                    continue;
+
+                                songs.Add(song.Name);
+
+                                <h6 class="card-subtitle mb-2 text-muted">@song.Name | (@song.TimesPlayed)</h6>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<hr>
+<div class="text-center">
+    <h6 class="display-5">Statistics</h6>
+
+    <h6 class="display-6">Total Cost: @Model.TotalCost €</h6>
+    <h6 class="display-6">Approximate event duration: @Model.ApproximateDuration</h6>
+</div>

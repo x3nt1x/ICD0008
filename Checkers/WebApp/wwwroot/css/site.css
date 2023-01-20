@@ -1,0 +1,55 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.game-table {
+  margin: auto;
+  width: initial;
+}
+
+.game-table-cell {
+  width: 75px;
+  height: 75px;
+  font-size: 2.4rem;
+  text-align: center;
+  background-color: black !important;
+}
+
+.game-table-cell-unavailable {
+  background-color: white !important;
+}
+
+.game-table-cell-empty {
+  background-color: black !important;
+}
+
+.game-table-cell-playable {
+  background-color: darkgreen !important;
+}
+
+.game-table-cell-player {
+  color: white;
+}
+
+.game-table-cell-selected {
+  color: green;
+}
+
+.game-table-cell-takeable {
+  color: darkred;
+}

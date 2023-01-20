@@ -1,0 +1,83 @@
+﻿@page
+@model WebApp.Pages.Plan.Playlist
+
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@if (Model.Error != null)
+{
+    <div class="alert alert-danger text-center" role="alert">
+        @Model.Error
+    </div>
+}
+
+<div class="row position-relative">
+    <div class="col text-center">
+        <h1 class="display-4">DJ sets</h1>
+        <p>Create DJ sets.</p>
+    </div>
+
+    <div class="col position-absolute mt-3">
+        <form>
+            <input type="hidden" name="SelectedDj" value="@Model.SelectedDj"/>
+            
+            <div class="input-group w-auto float-end">
+                <div class="form-outline">
+                    <input type="search" asp-for="Search" class="form-control" placeholder="search"/>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col position-absolute mt-3" style="width: auto">
+        <form method="post">
+            <select name="dj" class="form-select w-auto" aria-label="Default select example" onchange="this.form.submit()">
+                <option value="" disabled selected>Select DJ</option>
+                @foreach (var dj in Model.Djs)
+                {
+                    if (dj.Id == Model.SelectedDj)
+                    {
+                        <option value="@dj.Id" selected>@dj.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@dj.Id">@dj.Name</option>
+                    }
+                }
+            </select>
+        </form>
+    </div>
+</div>
+
+<div class="grid text-center">
+    <div class="row">
+        @foreach (var song in Model.Songs)
+        {
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <img src="https://www.wagbet.com/wp-content/uploads/2019/11/music_placeholder.png" class="card-img-top" alt="Song">
+                    <div class="card-body">
+                        <h5 class="card-title">@song.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Author: @song.Author?.Name</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Category: @song.Category?.Name</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Length: @TimeSpan.FromSeconds(song.Length).ToString(@"mm\:ss")</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Price per play: @song.Price €</h6>
+
+                        <form method="post">
+                            <input type="hidden" name="dj" value="@Model.SelectedDj"/>
+                            <input type="hidden" name="songId" value="@song.Id"/>
+                            <input class="btn btn-primary" type="submit" value="Add to set"/>
+
+                            <input class="btn btn-danger" name="rmv" type="submit" value="Remove from set"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

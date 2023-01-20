@@ -1,0 +1,28 @@
+﻿@page
+@model WebApp.Pages.Games.StartGame
+
+@{
+    ViewData["Title"] = "Start Game";
+}
+
+<div class="text-center">
+    <h2 class="display-6">Please disable <b>Pop-up blocker</b>!</h2>
+    <p>or use buttons below to lauch game manually</p>
+    
+    <a id="link1" href="/Games/Play?id=@Model.Id&playerId=2" class="btn btn-primary">Player 1</a>
+    <a id="link2" href="/Games/Play?id=@Model.Id&playerId=3" class="btn btn-dark" target="_blank">Player 2</a>
+</div>
+
+@section Scripts
+{
+    <script>
+        let link1 = document.querySelector("#link1");
+        let newWin = window.open(document.querySelector("#link2"));
+            
+        // Pop-ups allowed
+        if(newWin && !newWin.closed && typeof newWin.closed != 'undefined')
+            link1.click();
+        else
+            link1.setAttribute("target", "_blank");
+    </script>
+}

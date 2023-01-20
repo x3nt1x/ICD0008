@@ -1,0 +1,139 @@
+﻿@page
+@using Domain
+@model Play
+
+@{
+    ViewData["Title"] = GetPlayer();
+}
+
+<h1 class="text-center">Playing as: @GetPlayer()</h1>
+<h2 class="text-center">Status: @GetStatus()</h2>
+
+<table class="table table-bordered game-table">
+    @{
+        var board = Model.Brain.GetBoard();
+        var options = Model.Brain.Options;
+    }
+
+    @for (var x = 0; x < options.Width; x++)
+    {
+        <tr>
+            @for (var y = 0; y < options.Height; y++)
+            {
+                <td class="game-table-cell @GetColor(board[x, y], x, y)"
+                    @if (IsPlayerTurn())
+                    {
+                        if (Model.IsPredicted == 0 && Model.Brain.IsPlayerPiece(x, y))
+                        {
+                            <text>
+                                onclick="window.location = '/Games/Play?id=@Model.Game.Name&playerId=@Model.PlayerId&IsPredicted=@Model.IsPredicted&pieceX=@x&pieceY=@y'"
+                            </text>
+                        }
+                        else if (Model.IsPredicted == 1 && Model.Brain.Piece?.X == x && Model.Brain.Piece?.Y == y)
+                        {
+                            <text>
+                                onclick="window.location = '/Games/Play?id=@Model.Game.Name&playerId=@Model.PlayerId&IsPredicted=3'"
+                            </text>
+                        }
+                        else if (Model.Brain.Piece != null && Model.Brain.IsValidMove(x, y))
+                        {
+                            <text>
+                                onclick="window.location = '/Games/Play?id=@Model.Game.Name&playerId=@Model.PlayerId&IsPredicted=@Model.IsPredicted&pieceX=@Model.Brain.Piece.X&pieceY=@Model.Brain.Piece.Y&moveX=@x&moveY=@y'"
+                            </text>
+                        }
+                    }>
+                    @GetPiece(board[x, y])
+                </td>
+            }
+        </tr>
+    }
+</table>
+
+@section Scripts
+{
+    @if (!IsPlayerTurn() && !IsGameOver())
+    {
+        if (!options.Multiplayer && Model.Brain.Piece != null)
+        {
+            <script>
+                setTimeout(() => { window.location = '/Games/Play?id=@Model.Game.Name&playerId=@Model.PlayerId&pieceX=@Model.Brain.Piece.X&pieceY=@Model.Brain.Piece.Y'; }, 1000);
+            </script>
+        }
+        else
+        {
+            <script>
+                setTimeout(() => { window.location = '/Games/Play?id=@Model.Game.Name&playerId=@Model.PlayerId'; }, 1000);
+            </script>
+        }
+    }
+}
+
+@functions
+{
+    string GetPlayer()
+    {
+        return Model.PlayerId == (int)EGamePiece.Player1 ? "Player 1" : "Player 2";
+    }
+
+    bool IsGameOver()
+    {
+        return Model.Brain.State.Winner != null;
+    }
+
+    bool IsPlayerTurn()
+    {
+        if (IsGameOver())
+            return false;
+
+        return (int)Model.Brain.State.Turn == Model.PlayerId;
+    }
+
+    string GetStatus()
+    {
+        if (IsGameOver())
+            return $"{Model.Brain.State.Winner} won the game!";
+
+        return IsPlayerTurn() ? "Make a move" : "Please wait for opponent's move!";
+    }
+
+    string GetColor(EGamePiece? piece, int x, int y)
+    {
+        switch (piece)
+        {
+            case EGamePiece.Empty:
+                return "game-table-cell-empty";
+            case EGamePiece.Playable:
+                return "game-table-cell-playable";
+            case EGamePiece.Takeable:
+            case EGamePiece.TakeableKing:
+                return "game-table-cell-takeable";
+            case EGamePiece.Player1:
+            case EGamePiece.Player2:
+            case EGamePiece.King1:
+            case EGamePiece.King2:
+            {
+                // highlight selected piece
+                if (Model.Brain.Piece?.X == x && Model.Brain.Piece?.Y == y)
+                    return "game-table-cell-selected";
+
+                return "game-table-cell-player";
+            }
+            default:
+                return "game-table-cell-unavailable";
+        }
+    }
+
+    string GetPiece(EGamePiece? piece)
+    {
+        return piece switch
+        {
+            EGamePiece.Player1 => " ⦿ ",
+            EGamePiece.Player2 => " ⦾ ",
+            EGamePiece.King1 => " ♛ ",
+            EGamePiece.King2 => " ♕ ",
+            EGamePiece.Takeable => Model.Brain.State.Turn == EGamePiece.Player1 ? " ⦾ " : " ⦿ ",
+            EGamePiece.TakeableKing => Model.Brain.State.Turn == EGamePiece.Player1 ? " ♕ " : " ♛ ",
+            _ => " "
+            };
+    }
+}

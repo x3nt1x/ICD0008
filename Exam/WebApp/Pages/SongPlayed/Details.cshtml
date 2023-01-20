@@ -1,0 +1,31 @@
+@page
+@model WebApp.Pages_SongPlayed.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>SongPlayed</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SongPlayed.Dj)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SongPlayed.Dj!.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SongPlayed.Song)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SongPlayed.Song!.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.SongPlayed?.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

@@ -1,0 +1,19 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center">
+    @if (Model.Error != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.Error
+        </div>
+    }
+    
+    <h1 class="display-4">Welcome</h1>
+
+    <a href="Games/Create" class="btn btn-primary">New Game</a>
+    <a href="Games" class="btn btn-dark">Existing Games</a>
+</div>

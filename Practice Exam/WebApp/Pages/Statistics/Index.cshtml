@@ -1,0 +1,14 @@
+﻿@page
+@model Index
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Statistics</h1>
+    <hr>
+    <h6 class="display-6">Total Profit: @Model.TotalProfit €</h6>
+    <h6 class="display-6">Pending Orders: @Model.PendingOrders</h6>
+    <h6 class="display-6">Finalized Orders: @Model.FinalizedOrders</h6>
+    <h6 class="display-6">Top Buyer: @Model.TopBuyer</h6>
+</div>

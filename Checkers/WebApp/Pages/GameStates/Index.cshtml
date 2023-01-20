@@ -1,0 +1,80 @@
+@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Game States";
+}
+
+<h1>Game States</h1>
+
+<div class="input-inline">
+    <form>
+        <div class="input-group w-auto float-end">
+            <div class="form-outline">
+                <input type="search" asp-for="Search" class="form-control" placeholder="search"/>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GameState[0].Created)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameState[0].Player1Score)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameState[0].Player2Score)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameState[0].Turn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameState[0].Winner)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameState[0].Game)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    
+    <tbody>
+    @foreach (var item in Model.GameState)
+    {
+        <tr>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.Player1Score)
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.Player2Score)
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.Turn)
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.Winner)
+            </td>
+            <td class="align-middle">
+                @Html.DisplayFor(modelItem => item.Game!.Name)
+            </td>
+            <td class="align-middle">
+                <form method="post">
+                    <input type="hidden" name="id" value="@item.Id"/>
+                    <input type="submit" value="Delete" class="btn btn-danger btn-sm"/>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

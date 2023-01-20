@@ -1,0 +1,61 @@
+@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>GameOptions</h4>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GameOptions.Name" class="control-label"></label>
+                <input asp-for="GameOptions.Name" class="form-control"/>
+                <span asp-validation-for="GameOptions.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameOptions.Height" class="control-label">Width</label>
+                <input asp-for="GameOptions.Height" class="form-control"/>
+                <span asp-validation-for="GameOptions.Width" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameOptions.Width" class="control-label">Height</label>
+                <input asp-for="GameOptions.Width" class="form-control"/>
+                <span asp-validation-for="GameOptions.Height" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameOptions.StartingPlayer" class="control-label"></label>
+                <select asp-for="GameOptions.StartingPlayer" asp-items="Model.PlayersList" class="form-control"></select>
+                <span asp-validation-for="GameOptions.StartingPlayer" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="GameOptions.HighlightMoves"/> @Html.DisplayNameFor(model => model.GameOptions.HighlightMoves)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="GameOptions.Multiplayer"/> @Html.DisplayNameFor(model => model.GameOptions.Multiplayer)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts
+{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
